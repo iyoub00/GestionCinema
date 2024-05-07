@@ -1,4 +1,4 @@
-package com.example.gestioncinema.dao;
+package com.example.gestioncinema.dao.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.Date;
 public class Seance {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.TIME)
     private Date heureDebut;
 
 }

@@ -1,4 +1,4 @@
-package com.example.gestioncinema.dao;
+package com.example.gestioncinema.dao.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
