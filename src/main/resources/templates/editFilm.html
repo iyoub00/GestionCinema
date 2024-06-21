@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Film</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+</head>
+<body>
+<section class="section">
+  <div class="container">
+    <h1 class="title">Edit Film</h1>
+    <form th:action="@{'/admin/updateFilm/' + ${film.id}}" method="post" enctype="multipart/form-data">
+      <div class="field">
+        <label class="label">Title</label>
+        <div class="control">
+          <input class="input" type="text" name="titre" th:value="${film.titre}" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Description</label>
+        <div class="control">
+          <textarea class="textarea" name="description" required th:text="${film.description}"></textarea>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Photo</label>
+        <div class="control">
+          <input class="input" type="file" name="photo">
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Category</label>
+        <div class="control">
+          <div class="select">
+            <select name="categorieId">
+              <option th:each="categorie : ${categories}" th:value="${categorie.id}" th:text="${categorie.name}"></option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <button class="button is-primary" type="submit">Update</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+</body>
+</html>

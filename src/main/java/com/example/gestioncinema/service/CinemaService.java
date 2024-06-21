@@ -11,9 +11,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Stream;
+
 @Service
 @Transactional
-public class CinemaService implements CinemaManager{
+public class CinemaService implements CinemaManager {
+
     @Autowired
     private VilleRepository villeRepository;
     @Autowired
@@ -33,39 +35,34 @@ public class CinemaService implements CinemaManager{
     @Autowired
     private TicketRepository ticketRepository;
 
-
+    @Override
     public List<Film> searchFilms(String query) {
         return filmRepository.findByTitreContainingIgnoreCase(query);
     }
 
-    /* .
-     */
     @Override
     public void associateSeancesWithFilms() {
         List<Seance> seances = seanceRepository.findAll();
         List<Film> films = filmRepository.findAll();
-        Set<Film> usedFilms = new HashSet<>(); // Keep track of films already used
+        Set<Film> usedFilms = new HashSet<>();
 
         Random random = new Random();
 
         for (Seance seance : seances) {
-            // Check if all films have been associated with seances
             if (usedFilms.size() == films.size()) {
-                break; // No need to continue, all films have been associated
+                break;
             }
 
             Film film;
             do {
-                film = films.get(random.nextInt(films.size())); // Get random film
-            } while (usedFilms.contains(film)); // Check if the film has already been used
+                film = films.get(random.nextInt(films.size()));
+            } while (usedFilms.contains(film));
 
             seance.setFilm(film);
             seanceRepository.save(seance);
-
-            usedFilms.add(film); // Mark film as used
+            usedFilms.add(film);
         }
     }
-
 
     @Override
     public void initVilles() {
@@ -73,30 +70,20 @@ public class CinemaService implements CinemaManager{
             Ville ville = new Ville();
             ville.setName(nameVille);
             villeRepository.save(ville);
-            //villeRepository.save(new Ville(null,v));
         });
-
     }
-
-
-
-
 
     @Override
     public void initCinemas() {
         villeRepository.findAll().forEach(v -> {
-            Stream.of("MegaRama", "Imax", "Founoun", "Chahrazad", "Doualiz")
-                    .forEach(namCinema -> {
-                        Cinema cinema = new Cinema();
-                        cinema.setNom(namCinema);
-                        cinema.setNombreSalle(3 + (int) (Math.random() * 7));
-                        cinema.setVille(v);
-                        cinemaRepository.save(cinema);
-
-                    });
+            Stream.of("MegaRama", "Imax", "Founoun", "Chahrazad", "pathé").forEach(nameCinema -> {
+                Cinema cinema = new Cinema();
+                cinema.setNom(nameCinema);
+                cinema.setNombreSalle(3 + (int) (Math.random() * 7));
+                cinema.setVille(v);
+                cinemaRepository.save(cinema);
+            });
         });
-
-
     }
 
     @Override
@@ -104,17 +91,12 @@ public class CinemaService implements CinemaManager{
         cinemaRepository.findAll().forEach(cinema -> {
             for (int i = 0; i < cinema.getNombreSalle(); i++) {
                 Salle salle = new Salle();
-                salle.setName("Salle" + (i + 1));
+                salle.setName("Salle " + (i + 1));
                 salle.setCinema(cinema);
                 salle.setNombrePlace(15 + (int) (Math.random() * 20));
                 salleRepository.save(salle);
-
-
             }
-
         });
-
-
     }
 
     @Override
@@ -127,7 +109,6 @@ public class CinemaService implements CinemaManager{
                 placeRepository.save(place);
             }
         });
-
     }
 
     @Override
@@ -139,42 +120,33 @@ public class CinemaService implements CinemaManager{
                 seance.setHeureDebut(dateFormat.parse(s));
                 seanceRepository.save(seance);
             } catch (ParseException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Error parsing seance time: " + s, e);
             }
         });
-
-
     }
 
     @Override
     public void initCategories() {
-        Stream.of("Histoire", "Actions", "Fiction", "Drama").forEach(cat -> {
+        Stream.of("Histoire", "Actions", "Fiction", "Drama","Romance").forEach(cat -> {
             Categorie categorie = new Categorie();
             categorie.setName(cat);
             categorieRepository.save(categorie);
         });
-
     }
 
     @Override
     public void initfilms() {
-        double[] duress = new double[]{1, 1.5, 2};
+        double[] durations = new double[]{1, 1.5, 2};
         List<Categorie> categories = categorieRepository.findAll();
-        Stream.of("Games of Thrones", "Peacky Blinders", "Vikings","Banshee","Batman","Lost","Dexter","Spiderman","Taboo")
-                .forEach(titreFilm -> {
-                    Film film = new Film();
-                    film.setTitre(titreFilm);
-                    film.setDurree(duress[new Random().nextInt(duress.length)]);
-                    film.setPhoto(titreFilm.replaceAll(" ", "") + ".jpg");
-                    film.setCategorie(categories.get(new Random().nextInt(categories.size())));
-                    filmRepository.save(film);
-
-
-                });
-
+        Stream.of("Shawshank redemption", "Godfather", "Before Sunset", "Before Midnight", "Before Sunrise").forEach(titreFilm -> {
+            Film film = new Film();
+            film.setTitre(titreFilm);
+            film.setDurree(durations[new Random().nextInt(durations.length)]);
+            film.setPhoto(titreFilm.replaceAll(" ", "") + ".jpg");
+            film.setCategorie(categories.get(new Random().nextInt(categories.size())));
+            filmRepository.save(film);
+        });
     }
-
-
 
     @Override
     public void initProjections() {
@@ -196,13 +168,13 @@ public class CinemaService implements CinemaManager{
                 });
             });
         });
-
-
     }
 
-   /*  @Override
+    // Uncomment and complete this method if needed
+    /*
+    @Override
     public void initTickets() {
-       projectionRepository.findAll().forEach(p->{
+        projectionRepository.findAll().forEach(p -> {
             p.getSalle().getPlaces().forEach(place -> {
                 Ticket ticket = new Ticket();
                 ticket.setPlace(place);
@@ -212,12 +184,6 @@ public class CinemaService implements CinemaManager{
                 ticketRepository.save(ticket);
             });
         });
-
     }
-
-
-    }
-   */
-
-
+    */
 }

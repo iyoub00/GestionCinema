@@ -1,20 +1,31 @@
 package com.example.gestioncinema.service;
 
+import com.example.gestioncinema.dao.entities.Film;
+
+import java.util.List;
+
 public interface CinemaManager {
-    public void initVilles();
-    public void initCinemas();
-    public void initSalles();
-    public void initPlaces();
-    public void initSeances();
 
-    public void initCategories();
-    public void initfilms();
-    public void initProjections();
+    void initVilles();
 
+    void initCinemas();
 
+    void initSalles();
 
+    void initPlaces();
 
-    public void associateSeancesWithFilms();
-    //public void initTickets();
+    void initSeances();
 
+    void initCategories();
+
+    void initfilms();
+
+    void initProjections();
+
+    List<Film> searchFilms(String query);
+
+    void associateSeancesWithFilms();
+
+    // Uncomment if you want to implement ticket initialization
+    // void initTickets();
 }

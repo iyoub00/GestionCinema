@@ -99,6 +99,25 @@
         .footer a:hover {
             text-decoration: underline;
         }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .carousel-item {
+            flex: 0 0 auto;
+            scroll-snap-align: start;
+            width: 25%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
     </style>
 </head>
 <body>
@@ -107,7 +126,7 @@
 <nav class="navbar is-fixed-top">
     <div class="container">
         <div class="navbar-brand">
-            <a class="navbar-item" href="#">HiMovies</a>
+            <a class="navbar-item" href="#">Cinemovies</a>
             <div class="navbar-burger burger" data-target="navbarMenu">
                 <span></span>
                 <span></span>
@@ -140,11 +159,6 @@
                         </div>
                     </form>
                 </div>
-                <a class="navbar-item" th:href="@{/profile}">
-                    <span class="icon">
-                        <i class="fas fa-user"></i>
-                    </span> Profile
-                </a>
                 <a class="navbar-item" th:href="@{/login}">
                     <span class="icon">
                         <i class="fas fa-sign-in-alt"></i>
@@ -159,16 +173,16 @@
 <section class="hero">
     <div class="hero-body">
         <div class="container">
-            <h1 class="title">Find Movies, TV shows and more</h1>
+            <h1 class="title">Explore Our Collection</h1>
         </div>
     </div>
 </section>
 
 <!-- Main Content -->
 <div class="container section">
-    <div class="columns is-multiline">
+    <div class="carousel">
         <!-- Supposons que ListFilms soit la liste des films fournie par votre contrôleur -->
-        <div class="column is-one-quarter" th:each="film : ${ListFilms}">
+        <div class="carousel-item" th:each="film : ${ListFilms}">
             <div class="card">
                 <div class="card-image">
                     <figure class="image is-4by3">
@@ -187,7 +201,7 @@
 <!-- Footer -->
 <footer class="footer">
     <div class="container">
-        <p>&copy; 2024 HiMovies. All rights reserved.</p>
+        <p>&copy; Cinemovie. All rights reserved.</p>
         <p>
             <a href="#">Terms of Service</a> |
             <a href="#">Privacy Policy</a> |
