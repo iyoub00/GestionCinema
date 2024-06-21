@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Horaires des Séances</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand a {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .navbar-menu {
+            justify-content: center;
+        }
+
+        .navbar-end {
+            justify-content: flex-end;
+        }
+
+        .navbar-item {
+            font-size: 1.1rem;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+        }
+
+        .seances-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            padding: 40px 20px;
+        }
+
+        .seance {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 250px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .seance:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .seance-info {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .seance-date, .seance-time, .film-title {
+            margin: 0;
+            padding: 5px 0;
+            color: #333;
+        }
+
+        .film-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .film-image img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Barre de navigation -->
+<nav class="navbar is-fixed-top">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">HiMovies</a>
+            <div class="navbar-burger burger" data-target="navbarMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div id="navbarMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" th:href="@{/index}">Accueil</a>
+                <a class="navbar-item" th:href="@{/horaires}">Horaire</a>
+                <a class="navbar-item" th:href="@{/tarifs}">Tarifs</a>
+                <a class="navbar-item" th:href="@{/contact}">Contact</a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">Genre</a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" th:each="categorie : ${categories}" th:href="@{/categories(genreId=${categorie.id})}">
+                            <span th:text="${categorie.name}"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <form class="field has-addons" th:action="@{/search}" method="get">
+                        <div class="control">
+                            <input class="input" type="text" name="query" placeholder="Rechercher un film">
+                        </div>
+                        <div class="control">
+                            <button class="button is-info" type="submit">Rechercher</button>
+                        </div>
+                    </form>
+                </div>
+                <a class="navbar-item" th:href="@{/profile}">
+                    <span class="icon">
+                        <i class="fas fa-user"></i>
+                    </span> Profile
+                </a>
+                <a class="navbar-item" th:href="@{/login}">
+                    <span class="icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </span> Login
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<h1>Horaires des Séances</h1>
+<div class="seances-container">
+    <div th:each="seance : ${seances}" class="seance">
+        <div class="seance-info">
+            <p class="seance-time" th:text="${#dates.format(seance.heureDebut, 'HH:mm')}"></p>
+            <p class="film-title" th:text="${seance.film.titre}"></p>
+        </div>
+        <div class="film-image">
+            <img th:src="@{'/imageFilm/' + ${seance.film.id}}" alt="Film image">
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+        if ($navbarBurgers.length > 0) {
+            $navbarBurgers.forEach(el => {
+                el.addEventListener('click', () => {
+                    const target = el.dataset.target;
+                    const $target = document.getElementById(target);
+                    el.classList.toggle('is-active');
+                    $target.classList.toggle('is-active');
+                });
+            });
+        }
+    });
+</script>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

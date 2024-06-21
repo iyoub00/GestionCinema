@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 400px;
+            width: 100%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .notification.is-danger {
+            text-align: center;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        .control {
+            width: 100%;
+        }
+
+        .input {
+            width: 100%;
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.05);
+            color: #333;
+        }
+
+        .input::placeholder {
+            color: #666;
+        }
+
+        .button.is-primary {
+            width: 100%;
+            border-radius: 5px;
+            background-color: #3273dc;
+            border: none;
+        }
+
+        .button.is-primary:hover {
+            background-color: #276cda;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 class="title form-title">Sign in to your account</h1>
+    <form th:action="@{/login}" method="post">
+        <div th:if="${param.error}" class="notification is-danger">
+            <p>Username and Password Mismatch</p>
+        </div>
+        <div class="field">
+            <label class="label" for="username">Username</label>
+            <div class="control">
+                <input class="input" id="username" name="username" type="text" placeholder="Username" required>
+            </div>
+        </div>
+        <div class="field">
+            <label class="label" for="password">Password</label>
+            <div class="control">
+                <input class="input" id="password" name="password" type="password" placeholder="Password" required>
+            </div>
+        </div>
+        <div class="field">
+            <div class="control">
+                <button class="button is-primary" type="submit">Log in</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

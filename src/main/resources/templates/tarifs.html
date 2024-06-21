@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Tarifs des films au cinéma HiMovies">
+    <title>Tarifs - HiMovies</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand a {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .navbar-menu {
+            justify-content: center;
+        }
+
+        .navbar-end {
+            justify-content: flex-end;
+        }
+
+        .navbar-item {
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 30px;
+            margin-bottom: 40px;
+        }
+
+        .tarif-info {
+            text-align: center;
+            font-size: 1.5em;
+            margin-top: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .tarif-info p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Barre de navigation -->
+<nav class="navbar is-fixed-top">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">HiMovies</a>
+            <div class="navbar-burger burger" data-target="navbarMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div id="navbarMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" th:href="@{/index}" title="Accueil">Accueil</a>
+                <a class="navbar-item" th:href="@{/horaires}" title="Horaires">Horaire</a>
+                <a class="navbar-item" th:href="@{/tarifs}" title="Tarifs">Tarifs</a>
+                <a class="navbar-item" th:href="@{/contact}" title="Contact">Contact</a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" title="Genre">Genre</a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" th:each="categorie : ${categories}" th:href="@{/categories(genreId=${categorie.id})}" th:title="${categorie.name}">
+                            <span th:text="${categorie.name}"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <form class="field has-addons" th:action="@{/search}" method="get">
+                        <div class="control">
+                            <input class="input" type="search" name="query" placeholder="Rechercher un film" aria-label="Recherche">
+                        </div>
+                        <div class="control">
+                            <button class="button is-info" type="submit">Rechercher</button>
+                        </div>
+                    </form>
+                </div>
+                <a class="navbar-item" th:href="@{/profile}" title="Profil">
+          <span class="icon">
+            <i class="fas fa-user"></i>
+          </span>
+                </a>
+                <a class="navbar-item" th:href="@{/login}" title="Connexion">
+          <span class="icon">
+            <i class="fas fa-sign-in-alt"></i>
+          </span> Login
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Tarifs des films</h1>
+    <div class="tarif-info">
+        <p>Les prix des films sont :</p>
+        <p>De 12h00 à 17h00 : <span th:text="${tarifJour}"></span></p>
+        <p>De 19h00 à 21h00 : <span th:text="${tarifSoir}"></span></p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+        if ($navbarBurgers.length > 0) {
+            $navbarBurgers.forEach(el => {
+                el.addEventListener('click', () => {
+                    const target = el.dataset.target;
+                    const $target = document.getElementById(target);
+                    el.classList.toggle('is-active');
+                    $target.classList.toggle('is-active');
+                });
+            });
+        }
+    });
+</script>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

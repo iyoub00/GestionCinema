@@ -1,14 +1,20 @@
 package com.example.gestioncinema.service;
 
-public interface ICinemaInitService {
+public interface CinemaManager {
     public void initVilles();
     public void initCinemas();
     public void initSalles();
     public void initPlaces();
     public void initSeances();
+
     public void initCategories();
-    public void initFilms();
+    public void initfilms();
     public void initProjections();
-    public void initTickets();
+
+
+
+
+    public void associateSeancesWithFilms();
+    //public void initTickets();
 
 }

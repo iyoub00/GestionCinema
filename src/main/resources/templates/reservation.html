@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reservation de Billet</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand a {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .navbar-menu {
+            justify-content: center;
+        }
+
+        .navbar-end {
+            justify-content: flex-end;
+        }
+
+        .navbar-item {
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .film-info {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .film-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.05);
+            color: #333;
+        }
+
+        .form-control::placeholder {
+            color: #666;
+        }
+
+        .btn-primary {
+            width: 100%;
+            border-radius: 5px;
+            background-color: #3273dc;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #276cda;
+        }
+    </style>
+</head>
+<body>
+<!-- Barre de navigation -->
+<nav class="navbar is-fixed-top">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">HiMovies</a>
+            <div class="navbar-burger burger" data-target="navbarMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div id="navbarMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" th:href="@{/index}">Accueil</a>
+                <a class="navbar-item" th:href="@{/horaires}">Horaire</a>
+                <a class="navbar-item" th:href="@{/tarifs}">Tarifs</a>
+                <a class="navbar-item" th:href="@{/contact}">Contact</a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">Genre</a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" th:each="categorie : ${categories}" th:href="@{/categories(genreId=${categorie.id})}">
+                            <span th:text="${categorie.name}"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <form class="field has-addons" th:action="@{/search}" method="get">
+                        <div class="control">
+                            <input class="input" type="search" name="query" placeholder="Rechercher un film">
+                        </div>
+                        <div class="control">
+                            <button class="button is-info" type="submit">Rechercher</button>
+                        </div>
+                    </form>
+                </div>
+                <a class="navbar-item" th:href="@{/profile}">
+                    <span class="icon">
+                        <i class="fas fa-user"></i>
+                    </span> Profile
+                </a>
+                <a class="navbar-item" th:href="@{/login}">
+                    <span class="icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </span> Login
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h1 class="form-title">Votre film</h1>
+    <div class="film-info">
+        <p class="film-name" th:text="${Film.titre}"></p>
+        <p><span class="fw-bold" th:text="${prix}"></span> DH</p>
+    </div>
+    <form th:action="@{/Reservation/film={filmId}(filmId=${Film.id})}" method="post">
+        <div class="field">
+            <label for="name" class="label">Nom</label>
+            <div class="control">
+                <input type="text" id="name" name="name" class="input" placeholder="Votre nom" required>
+            </div>
+        </div>
+        <div class="field">
+            <label for="villeId" class="label">Ville</label>
+            <div class="control">
+                <div class="select is-fullwidth">
+                    <select id="villeId" name="villeId" required>
+                        <option value="" disabled selected>Choisissez une ville</option>
+                        <option th:each="v : ${ville}" th:value="${v.id}" th:text="${v.name}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label for="cinemaId" class="label">Cinema</label>
+            <div class="control">
+                <div class="select is-fullwidth">
+                    <select id="cinemaId" name="cinemaId" required>
+                        <option value="" disabled selected>Choisissez un cinéma</option>
+                        <option th:each="cinema : ${cinemas}" th:value="${cinema.id}" th:text="${cinema.nom}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label for="salleId" class="label">Salle</label>
+            <div class="control">
+                <div class="select is-fullwidth">
+                    <select id="salleId" name="salleId" required>
+                        <option value="" disabled selected>Choisissez une salle</option>
+                        <option th:each="salle : ${salles}" th:value="${salle.id}" th:text="${salle.name}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <div class="control">
+                <button type="submit" class="button is-primary">Réserver</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+        if ($navbarBurgers.length > 0) {
+            $navbarBurgers.forEach(el => {
+                el.addEventListener('click', () => {
+                    const target = el.dataset.target;
+                    const $target = document.getElementById(target);
+                    el.classList.toggle('is-active');
+                    $target.classList.toggle('is-active');
+                });
+            });
+        }
+    });
+</script>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

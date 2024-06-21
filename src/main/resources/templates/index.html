@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cinéma</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand a {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .navbar-menu {
+            justify-content: center;
+        }
+
+        .navbar-end {
+            justify-content: flex-end;
+        }
+
+        .navbar-item {
+            font-size: 1.1rem;
+        }
+
+        .hero {
+            background-color: #333;
+            color: #fff;
+            padding: 50px 0;
+        }
+
+        .hero-body {
+            text-align: center;
+        }
+
+        .section {
+            padding: 40px 20px;
+        }
+
+        .columns {
+            flex-wrap: wrap;
+        }
+
+        .column {
+            padding: 20px;
+        }
+
+        .card {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card-image img {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .card-content {
+            padding: 15px;
+            background-color: #fff;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Barre de navigation -->
+<nav class="navbar is-fixed-top">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="#">HiMovies</a>
+            <div class="navbar-burger burger" data-target="navbarMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <div id="navbarMenu" class="navbar-menu">
+            <div class="navbar-start">
+                <a class="navbar-item" th:href="@{/index}">Accueil</a>
+                <a class="navbar-item" th:href="@{/horaires}">Horaire</a>
+                <a class="navbar-item" th:href="@{/tarifs}">Tarifs</a>
+                <a class="navbar-item" th:href="@{/contact}">Contact</a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">Genre</a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" th:each="categorie : ${categories}" th:href="@{/categories(genreId=${categorie.id})}">
+                            <span th:text="${categorie.name}"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="navbar-end">
+                <div class="navbar-item">
+                    <form class="field has-addons" th:action="@{/search}" method="get">
+                        <div class="control">
+                            <input class="input" type="text" name="query" placeholder="Rechercher un film">
+                        </div>
+                        <div class="control">
+                            <button class="button is-info" type="submit">Rechercher</button>
+                        </div>
+                    </form>
+                </div>
+                <a class="navbar-item" th:href="@{/profile}">
+                    <span class="icon">
+                        <i class="fas fa-user"></i>
+                    </span> Profile
+                </a>
+                <a class="navbar-item" th:href="@{/login}">
+                    <span class="icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </span> Login
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">Find Movies, TV shows and more</h1>
+        </div>
+    </div>
+</section>
+
+<!-- Main Content -->
+<div class="container section">
+    <div class="columns is-multiline">
+        <!-- Supposons que ListFilms soit la liste des films fournie par votre contrôleur -->
+        <div class="column is-one-quarter" th:each="film : ${ListFilms}">
+            <div class="card">
+                <div class="card-image">
+                    <figure class="image is-4by3">
+                        <img th:src="@{'/imageFilm/' + ${film.id}}" th:alt="'Affiche de ' + ${film.titre}">
+                    </figure>
+                </div>
+                <div class="card-content">
+                    <p class="card-title" th:text="${film.titre}"></p>
+                    <a class="button is-link is-fullwidth" th:href="@{'/Reservation/film=' + ${film.id}}">Réserver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 HiMovies. All rights reserved.</p>
+        <p>
+            <a href="#">Terms of Service</a> |
+            <a href="#">Privacy Policy</a> |
+            <a href="#">Contact Us</a>
+        </p>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+        if ($navbarBurgers.length > 0) {
+            $navbarBurgers.forEach(el => {
+                el.addEventListener('click', () => {
+                    const target = el.dataset.target;
+                    const $target = document.getElementById(target);
+                    el.classList.toggle('is-active');
+                    $target.classList.toggle('is-active');
+                });
+            });
+        }
+    });
+</script>
+</body>
+</html>

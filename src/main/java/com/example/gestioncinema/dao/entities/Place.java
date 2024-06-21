@@ -1,27 +1,31 @@
 package com.example.gestioncinema.dao.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
+@Table
 public class Place {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int numero;
+    private double numero;
     private double longitude;
-    private double latitude;
     private double altitude;
     @ManyToOne
     private Salle salle;
-    @OneToMany(mappedBy = "place")
-    private Collection<Ticket>tickets;
+    @OneToOne(mappedBy = "place")
+    private Ticket  ticket;
+    private boolean reserve;
 }
