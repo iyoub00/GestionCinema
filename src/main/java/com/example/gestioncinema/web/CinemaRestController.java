@@ -64,12 +64,10 @@ public class CinemaRestController {
                 .body(imageBytes);
     }
 
-
     @GetMapping("/")
     public String root(){
         return "redirect:/index";
     }
-
 
     @GetMapping("/index")
     public String ListFilms(Model model) {
@@ -80,10 +78,12 @@ public class CinemaRestController {
         model.addAttribute("ListFilms",films);
         return "index";
     }
+
     @GetMapping("/login")
     public String login() {
         return "login";
     }
+
     @GetMapping("/register")
     public String register() {
         return "register";
@@ -109,6 +109,7 @@ public class CinemaRestController {
         model.addAttribute("ListFilms", films);
         return "index"; // ou la vue appropriée pour afficher les résultats
     }
+
     @GetMapping("/Reservation/film={id}")
     public String Reservation(Model model, @PathVariable (name = "id")Long id) {
         Optional<Film> film = filmRepository.findById(id);
@@ -125,7 +126,6 @@ public class CinemaRestController {
         model.addAttribute("prix", prix);
         return "reservation";
     }
-
 
     @PostMapping("/Reservation/film={filmId}")
     @Transactional
@@ -160,15 +160,11 @@ public class CinemaRestController {
         System.out.println("Aucune place disponible");
         return "redirect:/index";
     }
+
     @GetMapping("/horaires")
     public String afficherHoraires(Model model) {
-
         List<Seance> seances = seanceRepository.findAll();
-
-
         model.addAttribute("seances", seances);
-
-
         return "Horaire";
     }
 
@@ -180,6 +176,14 @@ public class CinemaRestController {
         model.addAttribute("categories", categories);
         return "admin";
     }
+
+    @GetMapping("/admin/addFilmForm")
+    public String showAddFilmForm(Model model) {
+        List<Categorie> categories = categorieRepository.findAll();
+        model.addAttribute("categories", categories);
+        return "addfilm"; // Ensure this matches the name of your template
+    }
+
     @PostMapping("/admin/addFilm")
     public String addFilm(@RequestParam("titre") String titre,
                           @RequestParam("description") String description,
@@ -206,17 +210,16 @@ public class CinemaRestController {
         filmRepository.save(film);
         return "redirect:/admin";
     }
+
     @GetMapping("/tarifs")
     public String showTarifsPage(Model model) {
         // Ajout des plages horaires et des prix correspondants
         String tarifJour = "70 DH (de 12h00 à 17h00)";
         String tarifSoir = "80 DH (de 19h00 à 21h00)";
-
         model.addAttribute("tarifJour", tarifJour);
         model.addAttribute("tarifSoir", tarifSoir);
         return "tarifs"; // Renvoie le nom de la vue Thymeleaf pour la page des tarifs
     }
-
 
     @GetMapping("/admin/editFilm/{id}")
     public String editFilm(@PathVariable Long id, Model model) {
@@ -231,6 +234,7 @@ public class CinemaRestController {
             return "redirect:/admin"; // Redirection vers la page d'administration si le film n'est pas trouvé
         }
     }
+
     @PostMapping("/admin/updateFilm/{id}")
     public String updateFilm(@PathVariable Long id,
                              @RequestParam("titre") String titre,
@@ -256,11 +260,12 @@ public class CinemaRestController {
         return "redirect:/admin"; // Redirige vers la page d'administration après la mise à jour
     }
 
-    @GetMapping("/admin/deleteFilm/{id}")
-    public String deleteFilm(@PathVariable Long id) {
+    @DeleteMapping("/admin/deleteFilm/{id}")
+    public ResponseEntity<Void> deleteFilm(@PathVariable Long id) {
         filmRepository.deleteById(id);
-        return "redirect:/admin";
+        return ResponseEntity.noContent().build();
     }
+
     @GetMapping("/contact")
     public String showContactForm() {
         return "contact"; // Renvoie le nom de la vue Thymeleaf pour la page de contact
@@ -273,18 +278,15 @@ public class CinemaRestController {
                                     RedirectAttributes redirectAttributes) {
         // Appeler le service pour traiter le message de contact
         contactService.sendContactMessage(name, email, message);
-
         // Ajouter un attribut flash pour afficher un message de succès
         redirectAttributes.addFlashAttribute("successMessage", "Votre message a été envoyé avec succès !");
-
         // Rediriger vers la page de contact
         return "redirect:/contact";
     }
-
 }
 
 @Data
-class TicketForm{
+class TicketForm {
     private String nomClients;
     private List<Long> tickets = new ArrayList<>();
 }
