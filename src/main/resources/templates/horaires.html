@@ -149,10 +149,10 @@
     <div th:each="seance : ${seances}" class="seance">
         <div class="seance-info">
             <p class="seance-time" th:text="${#dates.format(seance.heureDebut, 'HH:mm')}"></p>
-            <p class="film-title" th:text="${seance.film.titre}"></p>
+            <p class="film-title" th:if="${seance.film != null}" th:text="${seance.film.titre}">Film Title</p>
         </div>
         <div class="film-image">
-            <img th:src="@{'/imageFilm/' + ${seance.film.id}}" alt="Film image">
+            <img th:if="${seance.film != null}" th:src="@{'/imageFilm/' + ${seance.film.id}}" alt="Film image">
         </div>
     </div>
 </div>

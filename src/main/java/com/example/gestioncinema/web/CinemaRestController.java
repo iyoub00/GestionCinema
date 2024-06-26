@@ -6,7 +6,6 @@ import com.example.gestioncinema.service.CinemaService;
 import com.example.gestioncinema.service.ContactService;
 import jakarta.transaction.Transactional;
 import lombok.Data;
-import lombok.ToString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -63,6 +62,8 @@ public class CinemaRestController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .body(imageBytes);
     }
+
+
 
     @GetMapping("/")
     public String root(){
@@ -165,7 +166,7 @@ public class CinemaRestController {
     public String afficherHoraires(Model model) {
         List<Seance> seances = seanceRepository.findAll();
         model.addAttribute("seances", seances);
-        return "Horaire";
+        return "horaires";
     }
 
     @GetMapping("/admin")
